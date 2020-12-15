@@ -1,35 +1,40 @@
 <div class="container">
     <header>
-        <h3 class="ml-3">Search the blog</h3>
+        <h3 class="ml-3">Search the Job</h3>
     </header>
     <form method='GET' class="form-inline ml-4" action="{% url 'index' %}">
-          <div class="form-row align-items-center">
-
-        <input type="text" class="form-control" name="q" value="{{ query|escape }}" placeholder="Search posts"/>
+        <div class="form-row align-items-center">
+            <input type="text" class="form-control" name="q" value="{{ query|escape }}" placeholder="Enter a search query" required/>
             <div class="col-auto mt-2">
-                <button type="submit" class="btn btn-primary mb-2"> Search</button>
+                <button type="submit" id='submit' class="btn btn-primary mb-2"> Search</button>
             </div>
-          </div>
-    </form>
-{% if query %}
-    {% if results %}
-        <div class="media container">
-
-            <ul class="content list-group container">
-                {% for item in page_obj %}
-                    <li class="list-group-item">
-                        <strong>{{ item.title|safe }}</strong>
-                        <div class="media-body">
-                            {{ item.description|safe|truncatewords:75 }}
-                        </div>
-                    </li>
-
-                {% endfor %}
-            </ul>
         </div>
+    </form>
+    {% if query %}
+        {% if results %}
 
-    {% else %}
-        <p>Query returned no results.</p>
+                    {% for item in page_obj %}
+                <ul class="content list-group container">
+
+                        <li class="list-group-item mb-4">
+
+                            <strong>{{ item.title }}</strong>
+                            <p class="muted">Author: {{ item.author|safe }}</p>
+                            <div class="media-body mb-3">
+                                {{ item.description|safe|truncatewords:75 }}
+                            </div>
+                            <div class="media-footer mb-3">
+                                <a href="{{ item.link }}">Read more</a>
+                            </div>
+
+                            <span>Posted: {{ item.updated_date }}</span>
+                        </li>
+                </ul>
+
+                    {% endfor %}
+        {% else %}
+            <h3>Query returned no results.</h3>
+        {% endif %}
     {% endif %}
-{% endif %}
 </div>
+{% include '_pagination.html' %}
